@@ -6,7 +6,8 @@ const Color = {
     lightishgray: '#9d9d9d',
     smoke: '#EEEEEE',
     white: '#FFFFFF',
-    uaStudiosGreen: '#219653'
+    uaStudiosGreen: '#219653',
+    red: 'red'
 }
 
 export default Color
