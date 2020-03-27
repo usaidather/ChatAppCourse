@@ -9,6 +9,7 @@ import Constants from '../const/Constants'
 import DismissKeyboard from '../componenets/DismissKeyboard'
 import Utility from '../utils/Utility'
 import PasswordTextField from '../componenets/PasswordTextField'
+import firebase from '../firebase/Firebase'
 
 function SignInScreen() {
 
@@ -30,6 +31,46 @@ function SignInScreen() {
         return isValidField
     }
 
+    performAuth = () =>{
+        const isValidEmail = validateEmailAddress()
+        const isValidPassword = validatePasswordField()
+
+        if(isValidEmail && isValidPassword){
+            setEmailError('')
+            setPasswordError('')
+            registration(email, password)
+        }
+    }
+
+    registration = (email, password) => {
+        try {
+            setIsLoading(true)
+
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then(user => {
+                    setIsLoading(false)
+                    Alert.alert('Logged In')
+                }).catch((error) => {
+
+                    firebase.auth().createUserWithEmailAndPassword(email, password)
+                        .then(user => {
+                            setIsLoading(false)
+                            Alert.alert('Create A New user')
+                        })
+                        .catch((error) => {
+                            setIsLoading(false)
+                            console.log('error')
+                            Alert.alert(error.message)
+                        })
+                })
+        }
+        catch (error) {
+            setIsLoading(false)
+            Alert.alert(error.message)
+        }
+    }
+
+
 
 
     return (
@@ -43,7 +84,7 @@ function SignInScreen() {
                             term={email}
                             error={emailError}
                             placeHolder={Strings.EmailPlaceHolder}
-                            onTermChange={newEmail => { setEmail(newEmail)}}
+                            onTermChange={newEmail => { setEmail(newEmail) }}
                             onValidateEmailAddress={validateEmailAddress}
 
                         />
@@ -56,7 +97,7 @@ function SignInScreen() {
                             onValidatePasswordField={validatePasswordField}
                         />
 
-                        <Button title={Strings.Join}  />
+                        <Button title={Strings.Join} onPress = {performAuth} isLoading = {isLoading} />
                     </SafeAreaView>
                 </View>
 
