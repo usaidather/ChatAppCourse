@@ -11,7 +11,7 @@ import Utility from '../utils/Utility'
 import PasswordTextField from '../componenets/PasswordTextField'
 import firebase from '../firebase/Firebase'
 
-function SignInScreen() {
+function SignInScreen({navigation}) {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -49,13 +49,23 @@ function SignInScreen() {
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(user => {
                     setIsLoading(false)
-                    Alert.alert('Logged In')
+                    
+                    navigation.reset({
+                        index: 0,
+                        routes:  [{name: 'Groups Screen'}]
+                    })
+                    // Alert.alert('Logged In')
+
                 }).catch((error) => {
 
                     firebase.auth().createUserWithEmailAndPassword(email, password)
                         .then(user => {
                             setIsLoading(false)
-                            Alert.alert('Create A New user')
+                            // Alert.alert('Create A New user')
+                            navigation.reset({
+                                index: 0,
+                                routes:  [{name: 'Groups Screen'}]
+                            })
                         })
                         .catch((error) => {
                             setIsLoading(false)
