@@ -7,7 +7,7 @@ import firebase, { firestore } from '../firebase/Firebase'
 
 function GroupsScreen({ navigation }) {
     const [groups, setGroups] = useState([])
-
+  
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
@@ -17,16 +17,30 @@ function GroupsScreen({ navigation }) {
                     image={Images.add}
                 />
             ),
-            headerLeft: () => {
+            headerLeft: () => (
                 <ButtonWithBackground onPress={() => {
-
+                    signOutUser()
                 }}
-                    image={Images.add}
+                    image={Images.logout}
                 />
-            }
+            )
         })
 
-    })
+    } , [navigation]);
+
+    signOutUser = async () => {
+        try {
+            await firebase.auth().signOut();
+            navigation.reset({
+                index: 0,
+                routes:  [{name: 'SplashScreen'}]
+            })
+            
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    
 
     useEffect(() => {
         getChats()
